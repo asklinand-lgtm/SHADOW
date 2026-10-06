@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadow</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  color:white;
+  background:
+    radial-gradient(circle at 15% 20%,#40106f 0%,transparent 32%),
+    radial-gradient(circle at 85% 80%,#064b68 0%,transparent 32%),
+    #050509;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:30px 30px;
+  pointer-events:none;
+}
+
+/* หน้า KEY */
+
+#loginPage{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.login-box{
+  width:100%;
+  max-width:390px;
+  padding:35px 25px;
+  text-align:center;
+  background:rgba(10,8,20,.94);
+  border:1px solid #8b42ff;
+  border-radius:22px;
+  box-shadow:
+    0 0 25px rgba(139,66,255,.35),
+    inset 0 0 25px rgba(139,66,255,.08);
+}
+
+.login-box h1{
+  font-size:44px;
+  letter-spacing:7px;
+  margin-bottom:8px;
+  text-shadow:0 0 20px #8b42ff;
+}
+
+.subtitle{
+  color:#999;
+  font-size:12px;
+  letter-spacing:3px;
+  margin-bottom:28px;
+}
+
+#keyInput{
+  width:100%;
+  height:50px;
+  padding:0 15px;
+  border:1px solid #4d3470;
+  border-radius:12px;
+  outline:none;
+  background:#0b0911;
+  color:white;
+  text-align:center;
+  font-size:15px;
+}
+
+#keyInput:focus{
+  border-color:#b96cff;
+  box-shadow:0 0 15px rgba(185,108,255,.3);
+}
+
+.login-button{
+  width:100%;
+  height:50px;
+  margin-top:14px;
+  border:0;
+  border-radius:12px;
+  color:white;
+  font-weight:bold;
+  letter-spacing:2px;
+  background:linear-gradient(90deg,#702cff,#b52cff);
+  cursor:pointer;
+}
+
+.login-button:active{
+  transform:scale(.97);
+}
+
+#loginStatus{
+  min-height:20px;
+  margin-top:15px;
+  font-size:13px;
+}
+
+/* หน้า Panel */
+
+#panelPage{
+  display:none;
+  width:100%;
+  max-width:720px;
+  margin:auto;
+  padding:18px;
+}
+
+.header{
+  padding:20px;
+  margin-bottom:15px;
+  border:1px solid #743bc0;
+  border-radius:18px;
+  background:rgba(9,7,17,.94);
+}
+
+.header-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.header h1{
+  font-size:30px;
+  letter-spacing:4px;
+  text-shadow:0 0 15px #a45aff;
+}
+
+.online{
+  padding:7px 10px;
+  border:1px solid #267d58;
+  border-radius:20px;
+  color:#69ffb4;
+  font-size:10px;
+}
+
+.info{
+  margin-top:13px;
+  color:#999;
+  font-size:12px;
+}
+
+.info span{
+  color:#b96cff;
+  font-weight:bold;
+}
+
+/* การ์ด */
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.card{
+  padding:17px;
+  border:1px solid #282032;
+  border-radius:16px;
+  background:rgba(10,8,17,.94);
+  transition:.2s;
+}
+
+.card.active{
+  border-color:#a653ff;
+  box-shadow:0 0 18px rgba(166,83,255,.25);
+}
+
+.card-name{
+  font-size:14px;
+  font-weight:bold;
+}
+
+.card-desc{
+  margin-top:5px;
+  margin-bottom:15px;
+  color:#777;
+  font-size:10px;
+}
+
+.toggle-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.state{
+  color:#777;
+  font-size:10px;
+  font-weight:bold;
+}
+
+.card.active .state{
+  color:#bd75ff;
+}
+
+/* ปุ่มเปิด/ปิด */
+
+.switch{
+  width:48px;
+  height:25px;
+  padding:3px;
+  border-radius:30px;
+  background:#29252f;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.switch::after{
+  content:"";
+  display:block;
+  width:19px;
+  height:19px;
+  border-radius:50%;
+  background:#888;
+  transition:.2s;
+}
+
+.card.active .switch{
+  background:#7b31d0;
+  box-shadow:0 0 13px rgba(181,87,255,.55);
+}
+
+.card.active .switch::after{
+  transform:translateX(23px);
+  background:white;
+}
+
+/* ปุ่มด้านล่าง */
+
+.controls{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:15px;
+}
+
+.control{
+  height:45px;
+  border:1px solid #49325b;
+  border-radius:12px;
+  background:#100c17;
+  color:white;
+  font-size:11px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.control:active{
+  transform:scale(.96);
+}
+
+#notice{
+  position:fixed;
+  left:50%;
+  bottom:20px;
+  transform:translate(-50%,20px);
+  opacity:0;
+  padding:11px 18px;
+  border:1px solid #8c4bc5;
+  border-radius:30px;
+  background:#17111f;
+  font-size:12px;
+  transition:.25s;
+  pointer-events:none;
+}
+
+#notice.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+@media(max-width:520px){
+
+  .features{
+    grid-template-columns:1fr;
+  }
+
+  .controls{
+    grid-template-columns:1fr;
+  }
+
+  .login-box h1{
+    font-size:38px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- หน้าเข้าสู่ระบบ -->
+
+<div id="loginPage">
+
+  <div class="login-box">
+
+    <h1>SHADOW</h1>
+
+    <div class="subtitle">
+      ระบบเข้าถึงส่วนตัว
+    </div>
+
+    <input
+      id="keyInput"
+      type="text"
+      placeholder="พิมพ์ KEY ที่นี่"
+      autocomplete="off"
+    >
+
+    <button class="login-button" onclick="login()">
+      เข้าสู่ระบบ
+    </button>
+
+    <div id="loginStatus"></div>
+
+  </div>
+
+</div>
+
+
+<!-- หน้า Panel -->
+
+<div id="panelPage">
+
+  <div class="header">
+
+    <div class="header-row">
+
+      <h1>SHADOW</h1>
+
+      <div class="online">
+        ● ออนไลน์
+      </div>
+
+    </div>
+
+    <div class="info">
+      เปิดใช้งานอยู่:
+      <span id="activeCount">0</span>
+      รายการ
+    </div>
+
+  </div>
+
+
+  <div class="features">
+
+    <div class="card">
+      <div class="card-name">ช่วยเล็ง</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-name">ล็อกหัว</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-name">ช่วยเล็งเต็มรูปแบบ</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-name">ล็อกตัว</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-name">ขอบเขตช่วยเล็ง</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-name">ช่วยเล็งหัว</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-name">ช่วยเล็งนุ่มนวล</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-name">ติดตามเป้าหมาย</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-name">เรดาร์</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-name">ความแม่นยำ</div>
+      <div class="card-desc">ฟังก์ชันจำลอง</div>
+      <div class="toggle-row">
+        <span class="state">ปิด</span>
+        <div class="switch" onclick="toggle(this)"></div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="controls">
+
+    <button class="control" onclick="enableAll()">
+      เปิดทั้งหมด
+    </button>
+
+    <button class="control" onclick="resetAll()">
+      ปิดทั้งหมด
+    </button>
+
+    <button class="control" onclick="logout()">
+      ออกจากระบบ
+    </button>
+
+  </div>
+
+</div>
+
+
+<div id="notice"></div>
+
+
+<script>
+
+const correctKey = "SHADOW-2026";
+
+function login(){
+
+  const input = document.getElementById("keyInput");
+  const status = document.getElementById("loginStatus");
+
+  if(input.value.trim() === correctKey){
+
+    status.textContent = "เข้าถึงสำเร็จ ✓";
+    status.style.color = "#69ffb4";
+
+    setTimeout(function(){
+
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("panelPage").style.display = "block";
+
+    },600);
+
+  }else{
+
+    status.textContent = "รหัสไม่ถูกต้อง ✕";
+    status.style.color = "#ff5f7a";
+
+  }
+}
+
+
+function toggle(button){
+
+  const card = button.closest(".card");
+
+  card.classList.toggle("active");
+
+  const state = card.querySelector(".state");
+  const name = card.querySelector(".card-name").textContent;
+
+  if(card.classList.contains("active")){
+
+    state.textContent = "เปิด";
+    showNotice(name + " เปิดแล้ว");
+
+  }else{
+
+    state.textContent = "ปิด";
+    showNotice(name + " ปิดแล้ว");
+
+  }
+
+  updateCount();
+}
+
+
+function updateCount(){
+
+  const count =
+    document.querySelectorAll(".card.active").length;
+
+  document.getElementById("activeCount").textContent = count;
+
+}
+
+
+function enableAll(){
+
+  document.querySelectorAll(".card").forEach(function(card){
+
+    card.classList.add("active");
+    card.querySelector(".state").textContent = "เปิด";
+
+  });
+
+  updateCount();
+  showNotice("เปิดทั้งหมดแล้ว");
+}
+
+
+function resetAll(){
+
+  document.querySelectorAll(".card").forEach(function(card){
+
+    card.classList.remove("active");
+    card.querySelector(".state").textContent = "ปิด";
+
+  });
+
+  updateCount();
+  showNotice("ปิดทั้งหมดแล้ว");
+}
+
+
+function logout(){
+
+  resetAll();
+
+  document.getElementById("panelPage").style.display = "none";
+  document.getElementById("loginPage").style.display = "flex";
+
+  document.getElementById("keyInput").value = "";
+  document.getElementById("loginStatus").textContent = "";
+}
+
+
+function showNotice(message){
+
+  const notice = document.getElementById("notice");
+
+  notice.textContent = message;
+  notice.classList.add("show");
+
+  setTimeout(function(){
+
+    notice.classList.remove("show");
+
+  },1200);
+}
+
+
+document.getElementById("keyInput").addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Enter"){
+      login();
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
